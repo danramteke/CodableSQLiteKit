@@ -26,9 +26,12 @@ try context.run { (eventLoopGroup, threadPool) in
     .flatMap { (connection) -> EventLoopFuture<Void> in
 
       return connection.sql().execute(sql: SQLRaw(schema)) { _ in }
-        .flatMap({ _ in
-          Plant.writeAll(rows: plants, to: connection, on: eventLoop)
-        })
+        .flatMapThrowing { _ in
+          try connection.sql()
+            .insert(into: Plant.tablename)
+            .models(plants)
+            .run()
+        }
         .flatMap { _ in
           connection.close()
         }

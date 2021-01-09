@@ -6,6 +6,6 @@ struct Plant: Codable {
     let color: String?
 }
 
-extension Plant: TableIO {
- static var tablename: String { "Plants" }
+extension Plant {
+    static var tablename: String { "Plants" }
 }
